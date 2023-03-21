@@ -12,14 +12,10 @@ var Edevice = (function (_super) {
     Edevice.prototype.driftX = Edevice.prototype.driftY = 0
     //双击以 x y为中心顺时针旋转90°
     Edevice.prototype.ondblclick = function(eventPacket){
-        console.log(this);
-        console.log("resistance dblclick", eventPacket)
         var m = this.transform;
           if (!m) {
               m = this.transform = [1, 0, 0, 1, 0, 0]; 
           }
-
-          console.log("drift info:", this.driftX, this.driftY)
           matrix.translate(m, m, [-this.shape.cx - this.driftX , -this.shape.cy - this.driftY ])//旋转中心平移到原点
           matrix.rotate(m, m, -90 * Math.PI / 180);//旋转
           matrix.translate(m, m, [this.shape.cx +  this.driftX , this.shape.cy + this.driftY  ])//移动回旋转中心

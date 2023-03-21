@@ -11,7 +11,7 @@ import Power from '@/lib/zrender/Power'
 import Capacitance from '@/lib/zrender/Capacitance'
 import Resistance from '@/lib/zrender/Resistance'
 import Switch from '@/lib/zrender/Switch'
-import { matrix } from 'zrender'
+import Eline from '@/lib/zrender/Eline'
 export default {
   name: 'HelloWorld',
   data () {
@@ -45,12 +45,13 @@ export default {
       shape: {cx: 950, cy: 150, len: 20},
       style: {fill: 'none', stroke: '#000000'},
       draggable: true}) 
-    let line = new zrender.Line({shape: {x1: 150, y1: 150, x2: 60,y2:60, percent:0.8},style: {fill: 'red'}})
+    let line = new Eline({shape: {cx: 150, cy: 150, len: 60}, style: {fill: 'none', stroke: '#000000'},draggable: true})
     this.group.add(power)
     // this.group.add(capacitance)
     // this.group.add(line)
     this.group.add(resistance)
-    // this.group.add(sw)
+    this.group.add(sw)
+    this.group.add(line)
     // resistance.beforeUpdate = function(){
     //   //console.log('capacitance after', this.invTransform)
     //    console.log('resistance after', this.transform)
@@ -66,10 +67,10 @@ export default {
     //   this.parent.add(this.line[0])
     // }
 
-    resistance.onmouseout = function(eventPacket){
-      console.log("resistance onmouseout", this)
-      // this.parent.remove(this.line[0])
-    }
+    // resistance.onmouseout = function(eventPacket){
+    //   console.log("resistance onmouseout", this)
+    //   // this.parent.remove(this.line[0])
+    // }
 
     // resistance.ondblclick = function(eventPacket){
     //   console.log(this);
@@ -94,9 +95,16 @@ export default {
     // }
 
 
-    // sw.afterUpdate = function(){
-    //   //console.log('capacitance after', this.invTransform)
-    //    console.log('sw after', this.transform)
+    // sw.onmouseover = function(){
+    //   this.animate("shape", false) .when(500, {
+    //    toClose: 2}).start(); 
+    // }
+
+    // sw.onmouseout = function(){
+    //  // this.isClose = false
+    //   // this.markRedraw();
+    //   this.animate("shape", false) .when(500, {
+    //    toClose: 0}).start(); 
     // }
 
  
