@@ -32,7 +32,7 @@ export default {
     // .when(500, {
     //   len: 150,
     // })
-    // .start(); 
+    // .start();
     let capacitance = new Capacitance({
       shape: {cx: 550, cy: 150, len: 20},
       style: {fill: 'none', stroke: '#000000'}})
@@ -44,8 +44,8 @@ export default {
     let sw = new Switch({
       shape: {cx: 950, cy: 150, len: 20},
       style: {fill: 'none', stroke: '#000000'},
-      draggable: true}) 
-    let line = new Eline({shape: {cx: 150, cy: 150, len: 60}, style: {fill: 'none', stroke: '#000000'},draggable: true})
+      draggable: true})
+    let line = new Eline({shape: {cx: 150, cy: 150, dx: 210, dy:150}, style: {fill: 'none', stroke: '#000000'},draggable: true})
     this.group.add(power)
     // this.group.add(capacitance)
     // this.group.add(line)
@@ -62,7 +62,7 @@ export default {
     //   if(!this.line){
     //     this.line = []
     //   }
-    //   this.line[0] = new zrender.Line({shape: {x1: eventPacket.event.zrX, y1: eventPacket.event.zrY, 
+    //   this.line[0] = new zrender.Line({shape: {x1: eventPacket.event.zrX, y1: eventPacket.event.zrY,
     //     x2:  eventPacket.event.zrX + 60,y2:  eventPacket.event.zrY + 60, percent:0.8},style: {stroke: 'red'}})
     //   this.parent.add(this.line[0])
     // }
@@ -80,7 +80,7 @@ export default {
     //       // [cos Q,-sina Q, dx]    [x]
     //       // [sin Q, cos Q, dy]    [y]
     //       // [ 0,    0,       1]              [1]
-    //         m = this.transform = [1, 0, 0, 1, 0, 0]; 
+    //         m = this.transform = [1, 0, 0, 1, 0, 0];
     //     }
     //     // let rotate = 30 * Math.PI / 180
     //     // var sin = Math.sin(rotate);
@@ -94,20 +94,56 @@ export default {
     //     this.markRedraw();
     // }
 
+    var _this = this
+    this.zr.handler.on("mousemove",function(event){
+      if(this.beginDrawLine){
+        this.endDx = event.offsetX
+        this.endDy = event.offsetY
+        if(this.beginDx != this.endDx || this.beginDy != this.endDy){
+          let moveX = Math.abs(this.endDx - this.beginDx)
+          let moveY = Math.abs(this.endDy - this.beginDy)
+          if(moveX > moveY){
+            this.endDy = this.beginDy
+          }else {
+            this.endDx = this.beginDx
+          }
+           if(this.drawingLine){
+             _this.group.remove(this.drawingLine)
+           }
+          this.drawingLine = new Eline({shape: {cx: this.beginDx, cy: this.beginDy, dx: this.endDx, dy:this.endDy}, style: {fill: 'none', stroke: '#000000'},draggable: true})
+          _this.group.add(this.drawingLine)
+        }
+      }
+    })
+    this.zr.handler.on("mousedown",function(event){
+      this.beginDrawLine = true
+      this.endDx = event.offsetX
+      this.endDy = event.offsetY
+      this.beginDx = event.offsetX
+      this.beginDy = event.offsetY
+      // console.log(arguments)
+      console.log("zr mouse down")
+    })
 
-    // sw.onmouseover = function(){
-    //   this.animate("shape", false) .when(500, {
-    //    toClose: 2}).start(); 
-    // }
+    this.zr.handler.on("mouseup",function(event){
+      this.beginDrawLine = false
+      if(this.drawingLine){
+        this.drawingLine = null
+      }
+
+      //
+      // console.log(arguments)
+      console.log("zr mouse up")
+    })
 
     // sw.onmouseout = function(){
     //  // this.isClose = false
     //   // this.markRedraw();
     //   this.animate("shape", false) .when(500, {
-    //    toClose: 0}).start(); 
+    //    toClose: 0}).start();
     // }
 
- 
+
 
 
   }
